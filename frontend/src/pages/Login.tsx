@@ -1,16 +1,18 @@
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store/store';
-import { loginUser, clearError } from '../store/slices/authSlice';
-import { loginSchema, LoginFormData } from '../utils/validation';
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { loginUser, clearError } from "../store/slices/authSlice";
+import { loginSchema, LoginFormData } from "../utils/validation";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isLoading, error, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const {
     register,
@@ -22,7 +24,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/tasks');
+      navigate("/tasks");
     }
   }, [isAuthenticated, navigate]);
 
@@ -36,99 +38,149 @@ const Login = () => {
     dispatch(clearError());
     const result = await dispatch(loginUser(data));
     if (loginUser.fulfilled.match(result)) {
-      navigate('/tasks');
+      navigate("/tasks");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="relative min-h-screen flex items-center justify-center bg-slate-50 px-4 py-10">
+      {/* subtle background pattern */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(148,163,184,0.18),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(129,140,248,0.18),_transparent_55%)]" />
+
+      <header className="w-screen fixed top-0 z-30 backdrop-blur-sm bg-white/80 border-b border-slate-200/70 shadow-sm">
+        <div className="max-w-screen mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-slate-900">
+              <span className="text-green-500">Task</span>Manager
+            </h1>
+          </div>
+        </div>
+      </header>
+
+      <div className="relative max-w-md w-full">
+        <div className="bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-[0_18px_45px_rgba(15,23,42,0.12)] rounded-2xl px-7 py-8 sm:px-9 sm:py-9">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
               Sign in to your account
             </h2>
-            <p className="text-sm text-gray-600">
-              Or{' '}
-              <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                create a new account
-              </Link>
+            <p className="mt-3 text-[12px] text-center text-slate-400">
+              Use your registered username and password to access tasks.
             </p>
           </div>
-          
+
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             {error && (
-              <div className="rounded-lg bg-red-50 border border-red-200 p-4 animate-fade-in">
-                <div className="flex items-center">
-                  <svg className="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                  <div className="text-sm text-red-800 font-medium">{error}</div>
-                </div>
+              <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800 flex items-start gap-2">
+                <svg
+                  className="h-5 w-5 text-red-400 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="font-medium">{error}</span>
               </div>
             )}
-            
+
             <div className="space-y-5">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-slate-700 mb-1.5"
+                >
                   Username
                 </label>
                 <input
-                  {...register('username')}
+                  {...register("username")}
                   type="text"
                   autoComplete="username"
-                  className={`appearance-none relative block w-full px-4 py-3 border ${
-                    errors.username ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm`}
+                  className={`block w-full px-3.5 py-2.5 text-sm rounded-lg border transition-all duration-150 bg-slate-50/80 focus:bg-white placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                    errors.username ? "border-red-300" : "border-slate-300"
+                  }`}
                   placeholder="Enter your username"
                 />
                 {errors.username && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center">
-                    <span className="mr-1">⚠</span>
+                  <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span className="text-sm">⚠</span>
                     {errors.username.message}
                   </p>
                 )}
               </div>
-              
+
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-slate-700 mb-1.5"
+                >
                   Password
                 </label>
                 <input
-                  {...register('password')}
+                  {...register("password")}
                   type="password"
                   autoComplete="current-password"
-                  className={`appearance-none relative block w-full px-4 py-3 border ${
-                    errors.password ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm`}
+                  className={`block w-full px-3.5 py-2.5 text-sm rounded-lg border transition-all duration-150 bg-slate-50/80 focus:bg-white placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                    errors.password ? "border-red-300" : "border-slate-300"
+                  }`}
                   placeholder="Enter your password"
                 />
                 {errors.password && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center">
-                    <span className="mr-1">⚠</span>
+                  <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span className="text-sm">⚠</span>
                     {errors.password.message}
                   </p>
                 )}
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-            >
-              {isLoading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Signing in...
-                </>
-              ) : (
-                'Sign in'
-              )}
-            </button>
+            <div className="pt-1">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="group relative w-full inline-flex justify-center items-center py-2.5 px-4 text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0"
+              >
+                {isLoading ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4.5 w-4.5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
+              </button>
+
+              <p className="text-sm text-slate-500 mt-5 text-center">
+                Not have an account?{" "}
+                <Link
+                  to="/register"
+                  className="font-medium text-green-600 hover:text-green-500 underline-offset-4 hover:underline transition-colors"
+                >
+                  Create a new account
+                </Link>
+              </p>
+            </div>
           </form>
         </div>
       </div>
